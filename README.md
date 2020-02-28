@@ -16,22 +16,31 @@ Another drawback is the high use of limited resources:
 
 ## Structure of the sourcefiles
 
-(...) still to describe
+> Project Root
+> - platformio.ini --> platformIO configuration file<br>
+> - /src --> c++ source files for the ESP platform, compiled using platformIO<br>
+> - /lib --> library files for the ESP platform, compiled using platformIO<br>
+> - /webcontent<br>
+>     - /node_modules --> nodejs packages, installed automatically with npm install<br>
+>     - /dist --> location for generated index.html and index.html.gz (client build scripts)<br>
+>     - /src --> source files for the client side (html, scss/css, js, ...)<br>
+
 
 ## getting started
 ### IDE and tooling
 - As a base, I am using **Visual Studio Code** together with the **PlatformIO** extension.
 - for compiling SASS, I'm using the **Live Sass Compiler** extension (*ritwickdey.live-sass*)
+- for executing build tasks and running the testserver, I use the **Task Explorer** extension (*spmeesseman.vscode-taskexplorer*)
 
 ### setting up the project
 1. Either start from a clone of this repository, or copy the webcontent folder in an existing platformIO project folder
 2. run ```npm install``` from within the webcontent folder. this will create the node_modules subfolder and fetch all the required tools for building and testing.
 
-(...) to complete : loading the npm modules, which addons to use in vscode to make use of the gulp automation
-
 ## Running / Testing the application
 
-(...)- still to describe
+With the task explorer pane in visual studio code, the ___clientside___ can be build with the _gulp scripts_
+- **buildClient_inline** : generates all html, js and css files combined into one single index.html and the compressed version in index.html.gz. files are stored in the dist folder.
+- **buildClient_embed** : geneates the index.html.gz.h file that can be referenced from within the ESP code.
 
 Various runmodes on the client side
 a. final 
@@ -42,7 +51,6 @@ x. json requests handled by the arduino c++ code
 y. json requests mocked in the testenvironment
 
 ## Credits
-
 This project is greatly inspired by the information I found on a tutorial by Xose Pérez on his Tinkerman blog:
  https://tinkerman.cat/post/embed-your-website-in-your-esp8266-firmware-image/
 I have used several snippets from the example code Xose posted. 
