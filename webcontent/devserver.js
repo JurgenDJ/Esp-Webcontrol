@@ -1,5 +1,6 @@
-const express = require('express')
-const app = express()
+const fastify = require('fastify')({
+    logger: true
+})
 const fs = require('fs');
 const path = require('path');
 const port = 3000
@@ -29,58 +30,66 @@ return;
 
 function serve_source() {
     // TODO: add liveserver/live update functionality
-    app.use('/', express.static('src'))
-    // app.get('/', (req, res) => {
-    //     res.redirect("index.html");
-    // });
-    // app.get('/index.html', (req, res) => {
-    //     res.sendFile(path.resolve('src/index.html'));
-    // });
-    // app.get('/main.js', (req, res) => {
-    //     res.sendFile(path.resolve('src/main.js'));
-    // });
-    // app.get('/styles.css', (req, res) => {
-    //     res.sendFile(path.resolve('src/styles.css'));
-    // });
-    // app.get('/data.json', (req, res) => {
-    //     res.sendFile(path.resolve('src/data.json'));
-    // });
-    app.listen(port, () => console.log(`Devserver in SOURCE MODE listening on port ${port}!`));
+    fastify.register(require('fastify-static'), {
+        root: path.join(__dirname, 'src')
+    })
+    runserver('Devserver in SOURCE MODE');
 }
 
 function serve_inline() {
-    app.get('/', (req, res) => {
+    fastify.register(require('fastify-static'), { root: __dirname, serve: false });
+    fastify.get('/', (req, res) => {
         res.redirect("index.html");
     });
-    app.static('/',)
-    app.get('/index.html', (req, res) => {
-        res.sendFile(path.resolve('dist/index.html'));
+    fastify.get('/index.html', (req, res) => {
+        res.sendFile('dist/index.html');
     });
-    app.get('/data.json', (req, res) => {
-        res.sendFile(path.resolve('src/data.json'));
+    fastify.get('/data.json', (req, res) => {
+        res.sendFile('src/data.json');
     });
-    app.listen(port, () => console.log(`Devserver in INLINE MODE listening on port ${port}!`));
+    runserver('Devserver in INLINE MODE');
 }
 
 function serve_gz() {
     var gzfile_name = path.resolve("dist/index.html.gz");
     var gzfile_length = fs.statSync(gzfile_name)["size"];
-    app.get('/', (req, res) => {
+    var last_modified = new Date().toUTCString();
+
+    fastify.get('/', (req, res) => {
         res.redirect("index.html");
     });
-    app.get('/index.html', (req, res) => {
-        res.set({
-            'Content-Encoding': 'gzip',
-            'Content-Type': 'text/html',
-            // "Last-Modified": last_modified, // sendFile will take care of this
-            'Content-Length': gzfile_length,
-        })
-        res.status(200).sendFile(gzfile_name);
+    fastify.get('/index.html', (req, res) => {
+        if (req.headers["if-modified-since"] === last_modified) {
+            console.log("sending html statuscode 304")
+            res.code(304).send();
+        } else {
+            res.headers({
+                'Content-Encoding': 'gzip',
+                'Content-Type': 'text/html',
+                "Last-Modified": last_modified, // sendFile will take care of this
+                'Content-Length': gzfile_length,
+            });
+            const stream = fs.createReadStream(path.resolve(gzfile_name))
+            res.send(stream);
+        }
     });
 
 
-    app.get('/data.json', (req, res) => {
-        res.sendFile(path.resolve('src/data.json'));
+    fastify.get('/data.json', (req, res) => {
+        const stream = fs.createReadStream(path.resolve('src/data.json'))
+        res.send(stream);
+        // res.sendFile(path.resolve('src/data.json'));
     });
-    app.listen(port, () => console.log(`Devserver in GZ MODE listening on port ${port}!`));
+    runserver('Devserver in GZ MODE');
+}
+
+function runserver(msg) {
+    const port = 3000
+    fastify.listen(port, function (err, address) {
+        if (err) {
+            fastify.log.error(err)
+            process.exit(1)
+        }
+        fastify.log.info(msg + ` | listening on ${address}`)
+    })
 }
