@@ -1,0 +1,188 @@
+@charset "UTF-8";
+html body {
+  height: 100%;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 1fr minmax(320px, 1024px) 1fr;
+      grid-template-columns: 1fr minmax(320px, 1024px) 1fr;
+  -ms-grid-rows: minmax(50px, auto) 1fr minmax(50px, auto);
+      grid-template-rows: minmax(50px, auto) 1fr minmax(50px, auto);
+      grid-template-areas: "ml header mr" "ml main mr" "ml footer mr";
+}
+
+section.header {
+  -ms-grid-row: 1;
+  -ms-grid-column: 2;
+  grid-area: header;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  background-color: #311696;
+  min-height: 10px;
+  color: white;
+  padding: 1em;
+}
+
+#mainSection {
+  -ms-grid-row: 2;
+  -ms-grid-column: 2;
+  grid-area: main;
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: (minmax(240px, 1fr))[auto-fit];
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-gap: 0.5em;
+  padding: 0.5em;
+  background-color: #90dfe2;
+}
+
+section.footer {
+  -ms-grid-row: 3;
+  -ms-grid-column: 2;
+  grid-area: footer;
+  background-color: #311696;
+  min-height: 10px;
+  color: white;
+  padding: 1em;
+}
+
+div.card {
+  width: 100%;
+  background-color: white;
+  min-height: 9em;
+  width: 100%;
+  border-radius: 5px;
+}
+
+div.card.card-summary {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  border-radius: 10px;
+  border-width: 3px;
+  border-style: solid;
+  border-color: #ff4e4e;
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 2fr 1fr;
+      grid-template-columns: 2fr 1fr;
+  -ms-grid-rows: auto (1fr)[3];
+      grid-template-rows: auto repeat(3, 1fr);
+}
+
+div.card.card-summary h1 {
+  background-color: #ff4e4e;
+  grid-column: span 2;
+  -ms-grid-row: 1;
+  grid-row: 1;
+}
+
+div.card.card-summary div {
+  font-size: larger;
+}
+
+div.card.card-room {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-rows: auto (1fr)[3] auto;
+      grid-template-rows: auto repeat(3, 1fr) auto;
+  -ms-grid-columns: 3fr 1fr;
+      grid-template-columns: 3fr 1fr;
+      grid-template-areas: "title title" "a b" "a c" "a d" "a e" "buttons buttons";
+}
+
+div.card h1 {
+  -ms-grid-row: 1;
+  -ms-grid-column: 1;
+  -ms-grid-column-span: 2;
+  grid-area: title;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  margin: 0;
+  width: 100%;
+  border-radius: 5px 5px 0px 0px;
+  padding: 2px 0px 2px 0px;
+  background-color: blue;
+  color: white;
+  font-size: 1.5em;
+}
+
+div.card div.maintemp {
+  grid-area: a;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -ms-grid-row: 2;
+  -ms-grid-row-span: 4;
+  -ms-grid-column: 1;
+  grid-area: a;
+  font-size: 2.5em;
+}
+
+div.card div {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  font-size: small;
+}
+
+div.card div.buttons {
+  -ms-grid-row: 6;
+  -ms-grid-column: 1;
+  -ms-grid-column-span: 2;
+  grid-area: buttons;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-pack: stretch;
+      -ms-flex-pack: stretch;
+          justify-content: stretch;
+  padding: 5px;
+}
+
+div.card div.buttons button {
+  width: 100%;
+  margin: 0.2em;
+  border-width: 0;
+  background-color: blue;
+  color: white;
+  padding: 0.4em;
+}
+
+div.card .degree::after {
+  content: '°C';
+}
+/*# sourceMappingURL=styles.css.map */

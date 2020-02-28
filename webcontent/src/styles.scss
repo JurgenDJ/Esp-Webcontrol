@@ -1,0 +1,124 @@
+$clr_bg_header_footer: rgb(49, 22, 150);
+$clr_bg_page: rgb(144, 223, 226);
+$clr_txt_header_footer: rgb(255, 255, 255);
+$clr_card: rgb(255, 255, 255);
+$clr_card_title : blue;
+$clr_summ_card: darken(rgb(255, 180, 180),20%);
+
+@mixin centerflex{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+html body{
+    height:100%;
+    font-family: Arial, Helvetica, sans-serif;
+    
+}
+
+body {
+    display:grid;
+    grid-template-columns: 1fr minmax(320px, 1024px) 1fr;
+    grid-template-rows: minmax(50px, auto) 1fr minmax(50px, auto);
+    grid-template-areas: 
+        "ml header mr"
+        "ml main mr"
+        "ml footer mr";
+}
+
+section.header{
+    grid-area: header;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between ;
+    background-color: $clr_bg_header_footer;
+    min-height: 10px;
+    color:$clr_txt_header_footer;
+    padding: 1em;
+}
+#mainSection{
+    grid-area: main;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-gap: 0.5em;
+    padding: 0.5em;
+    background-color: $clr_bg_page;
+}
+section.footer{
+    grid-area: footer;
+    background-color: $clr_bg_header_footer;
+    min-height: 10px;
+    color:$clr_txt_header_footer;
+    padding: 1em;
+}
+div.card{
+    width: 100%;
+    background-color: $clr_card;
+    min-height: 9em;
+    width:100%;
+    border-radius: 5px;
+    &.card-summary{
+        box-sizing: border-box;
+        border-radius: 10px;
+        border-width: 3px;
+        border-style: solid;
+        border-color: $clr_summ_card;
+        display:grid;
+        // padding: 10px;
+        grid-template-columns: 2fr 1fr;
+        grid-template-rows: auto repeat(3,1fr);
+        h1{
+            background-color: $clr_summ_card;
+            grid-column: span 2;
+            grid-row: 1;
+        }
+        div{
+            font-size: larger;
+        }
+    }
+    &.card-room{
+        display:grid;
+        grid-template-rows: auto repeat(3,1fr) auto;
+        grid-template-columns: 3fr 1fr;
+        grid-template-areas: "title title" "a b" "a c" "a d" "a e" "buttons buttons";
+    }
+    h1{
+        grid-area: title;
+        @include centerflex();
+        margin: 0;
+        width:100%;
+        border-radius: 5px 5px 0px 0px;
+        padding: 2px 0px 2px 0px;
+        background-color: $clr_card_title;
+        color : white;   
+        font-size: 1.5em;
+     }
+     div.maintemp{
+         grid-area: a;
+         @include centerflex();
+         grid-area: a;
+         font-size: 2.5em;
+     }
+     div{
+         @include centerflex();
+         font-size: small;
+     }
+     div.buttons{
+         grid-area: buttons;
+         display:flex;
+         flex-direction: row;
+         justify-content: stretch;
+         padding:5px;
+         button{
+             width:100%;
+             margin:0.2em;
+             border-width: 0;
+             background-color: $clr_card_title;//darken($color: $clr_card_title, $amount: 10%);
+             color: white;
+             padding:0.4em;
+         }
+     }
+     .degree::after{
+        content: '°C';
+     }
+}

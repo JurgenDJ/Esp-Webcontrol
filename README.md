@@ -18,6 +18,17 @@ Another drawback is the high use of limited resources:
 
 (...) still to describe
 
+## getting started
+### IDE and tooling
+- As a base, I am using **Visual Studio Code** together with the **PlatformIO** extension.
+- for compiling SASS, I'm using the **Live Sass Compiler** extension (*ritwickdey.live-sass*)
+
+### setting up the project
+1. Either start from a clone of this repository, or copy the webcontent folder in an existing platformIO project folder
+2. run ```npm install``` from within the webcontent folder. this will create the node_modules subfolder and fetch all the required tools for building and testing.
+
+(...) to complete : loading the npm modules, which addons to use in vscode to make use of the gulp automation
+
 ## Running / Testing the application
 
 (...)- still to describe
@@ -33,4 +44,5 @@ y. json requests mocked in the testenvironment
 ## Credits
 
 This project is greatly inspired by the information I found on a tutorial by Xose Pérez on his Tinkerman blog:
- https://tinkerman.cat/post/embed-your-website-in-your-esp8266-firmware-image/ 
+ https://tinkerman.cat/post/embed-your-website-in-your-esp8266-firmware-image/
+I have used several snippets from the example code Xose posted. 
