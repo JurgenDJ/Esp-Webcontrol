@@ -37,7 +37,7 @@ Another drawback is the high use of limited resources:
 2. run ```npm install``` from within the webcontent folder. this will create the node_modules subfolder and fetch all the required tools for building and testing.
 
 ## Running / Testing the application
-
+    
 With the task explorer pane in visual studio code, the ___clientside___ can be build with the _gulp scripts_
 - **buildClient_inline** : generates all html, js and css files combined into one single index.html and the compressed version in index.html.gz. files are stored in the dist folder.
 - **buildClient_embed** : geneates the index.html.gz.h file that can be referenced from within the ESP code.
