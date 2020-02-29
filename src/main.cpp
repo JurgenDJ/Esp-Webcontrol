@@ -21,9 +21,7 @@ void onIndex(AsyncWebServerRequest *request)
   {
     // Dump the byte array in PROGMEM with a 200 HTTP code (OK)
     AsyncWebServerResponse *response = request->beginResponse_P(200, "text/html", index_html_gz, index_html_gz_len);
-    // Tell the browswer the contemnt is Gzipped
     response->addHeader("Content-Encoding", "gzip");
-    // And set the last-modified datetime so we can check if we need to send it again next time or not
     response->addHeader("Last-Modified", index_last_update);
     request->send(response);
   }
@@ -81,7 +79,6 @@ void setup()
 {
   Serial.begin(9600);
   Serial.println("starting ...");
-  // Configure you wifi access
   WiFi.mode(WIFI_STA);
   WiFi.begin(wifi_ssid, wifi_pass);
   while (WiFi.status() != WL_CONNECTED){
