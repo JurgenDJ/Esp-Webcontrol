@@ -5,3 +5,4 @@
 .vscode/ipch
 webcontent/node_modules
 webcontent/dist
+/src/wifi_credentials.h
