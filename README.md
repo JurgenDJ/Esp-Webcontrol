@@ -10,7 +10,7 @@ Another drawback is the high use of limited resources:
 - Concurrent network connections, when serving multiple html/javascript/css fragments. 
 
 ## Composition of the application
-1. The webpage is developed in a typical environment, using HRML, SASS/CSS, and javascript files. This enables the use of linting, intellisense, typescript and SASS transpiling, ....
+1. The webpage is developed in a typical environment, using HTML, SASS/CSS, and javascript files. This enables the use of linting, intellisense, typescript and SASS transpiling, ....
 2. The hosting page is minified, inlined and gzipped, to one single condensed webrequest.
 3. All interaction with the hardware, retrieving sensorvalues, setting switches, ... is done in short json based get/post requests.
 
@@ -21,7 +21,7 @@ Another drawback is the high use of limited resources:
 > - /src --> c++ source files for the ESP platform, compiled using platformIO<br>
 > - /lib --> library files for the ESP platform, compiled using platformIO<br>
 > - /webcontent<br>
->     - /node_modules --> nodejs packages, installed automatically with npm install<br>
+>     - /node_modules --> nodejs packages, installed automatically with ```npm install```<br>
 >     - /dist --> location for generated index.html and index.html.gz (client build scripts)<br>
 >     - /src --> source files for the client side (html, scss/css, js, ...)<br>
 
@@ -40,9 +40,9 @@ Another drawback is the high use of limited resources:
     
 With the task explorer pane in visual studio code, the ___clientside___ can be build with the _gulp scripts_
 - **buildClient_inline** : generates all html, js and css files combined into one single index.html and the compressed version in index.html.gz. files are stored in the dist folder.
-- **buildClient_embed** : geneates the index.html.gz.h file that can be referenced from within the ESP code.
+- **buildClient_embeded** : geneates the index.html.gz.h file that can be referenced from within the ESP code.
 
-Various runmodes on the client side
+Various runmodes on the client side:
 a. final 
 b. inlined html
 c. base html
