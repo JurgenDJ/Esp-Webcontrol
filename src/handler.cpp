@@ -1,53 +1,31 @@
 #include <handler.h>
 #include <ArduinoJson.h>
 
-
+JsonObject addRoomObject(JsonArray parent, const char* id, float temp, float tempSet, int timer, bool onOff){
+  JsonObject room = parent.createNestedObject();
+  room["id"] = id;
+  room["temp"] = temp;
+  room["tempSet"] = tempSet;
+  room["timer"] = timer;
+  room["onOff"] = onOff;
+  return room;
+}
 
 void onData(AsyncWebServerRequest *request)
 {
-  // Sending Dummy data
-  const char *dummy_data =
-      "{"
-      "    \"floor0Heating\" : true,"
-      "    \"floor1Heating\": true,"
-      "    \"PrioSanitary\" : false,"
-      "    \"rooms\" : ["
-      "        {"
-      "            \"id\": \"liv\","
-      "            \"temp\": 20,"
-      "            \"tempSet\": 22.5,"
-      "            \"timer\": 0,"
-      "            \"onOff\": true"
-      "        },"
-      "        {"
-      "            \"id\": \"bath\","
-      "            \"temp\": 20.5,"
-      "            \"tempSet\": 22.5,"
-      "            \"timer\": 1800,"
-      "            \"onOff\": true"
-      "        },"
-      "        {"
-      "            \"id\": \"room1\","
-      "            \"temp\": 19.5,"
-      "            \"tempSet\": 21.5,"
-      "            \"timer\": 0,"
-      "            \"onOff\": true"
-      "        },"
-      "        {"
-      "            \"id\": \"room2\","
-      "            \"temp\": 19.8,"
-      "            \"tempSet\": 20.0,"
-      "            \"timer\": 0,"
-      "            \"onOff\": true"
-      "        },"
-      "        {"
-      "            \"id\": \"room3\","
-      "            \"temp\": 17.5,"
-      "            \"tempSet\": 16.5,"
-      "            \"timer\": 0,"
-      "            \"onOff\": false"
-      "        }"
-      "    ]"
-      "}";
-  request->send(200, "data/json", dummy_data);
+  const int capacity = JSON_OBJECT_SIZE(3)+JSON_ARRAY_SIZE(5)+5*JSON_OBJECT_SIZE(5);
+  StaticJsonDocument<capacity> doc;
+  doc["floor0Heating"] = true;
+  doc["floor1Heating"] = true;
+  doc["PrioSanitary"] = false;
+  JsonArray roomsList = doc.createNestedArray("rooms");
+  addRoomObject(roomsList, "liv", 20, 22.5, 0, true);
+  addRoomObject(roomsList, "bath", 20.5, 22.5, 1800, true);
+  addRoomObject(roomsList, "room1", 19.5, 21.5, 0, true);
+  addRoomObject(roomsList, "room2", 19.8, 20.0, 0, true);
+  addRoomObject(roomsList, "room3", 17.5, 16.5, 0, false);
+
+  AsyncResponseStream *response = request->beginResponseStream("application/json");
+  serializeJson(doc,*response);
+  request->send(response);
 }
