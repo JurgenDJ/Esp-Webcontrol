@@ -1,42 +1,61 @@
-const fastify = require('fastify')({
-    logger: true
-})
+const Fastify = require('fastify');
+const fastify = Fastify({ logger: true });
 const fs = require('fs');
+const yaml = require('js-yaml');
 const path = require('path');
 const port = 3000
 
+try {
+    const config = yaml.load(fs.readFileSync('devserver-config.yaml', 'utf8'), { schema: yaml.JSON_SCHEMA });
+    console.log(JSON.stringify(config));
+    var validRunmodes = ["source", "inline", "gz"]
 
-var argv = require('minimist')(process.argv.slice(2));
-
-var validRunmodes = ["source", "inline", "gz"]
-if (!(validRunmodes.indexOf(argv.mode) > -1)) {
-    console.log("Make sure to include mode parameter:\n --mode source\n --mode inline\n --mode gz\n");
-    return;
+    if (!(validRunmodes.indexOf(config.mode) > -1)) {
+        console.log("Make sure to include mode parameter in deveserver-config.yaml file");
+        return;
+    }
+    switch (config.mode) {
+        case "source":
+            serve_source(config);
+            break;
+        case "inline":
+            serve_inline(config);
+            break;
+        case "gz":
+            serve_gz(config);
+        default:
+            console.log("NOT IMPLEMENTED");
+    }
+} catch (e) {
+    console.log(e);
 }
-switch (argv.mode) {
-    case "source":
-        serve_source();
-        break;
-    case "inline":
-        serve_inline();
-        break;
-    case "gz":
-        serve_gz();
-    default:
-        console.log("NOT IMPLEMENTED");
+
+function routeActions(config, static_prefix) {
+    if (config.proxy_enabled) {
+        fastify.register(require('fastify-reply-from'), { base: config.proxy_address });
+        for (url of config.action_urls) {
+            console.log('/'+url);
+            fastify.get('/' + url, (req, res) => res.from('/' + url));
+            fastify.post('/' + url, (req, res) => res.from('/' + url));
+        }
+    } else {
+        for (url of config.action_urls) {
+            console.log('/'+url+"  -> "+path.resolve('src/'+url));
+            fastify.get('/' + url, (req, res) => res.sendFile(static_prefix + url));
+            fastify.post('/' + url, (req, res) => res.sendFile(static_prefix+url));
+        }
+    }
 }
-return;
 
-
-function serve_source() {
-    // TODO: add liveserver/live update functionality
+function serve_source(config) {
     fastify.register(require('fastify-static'), {
         root: path.join(__dirname, 'src')
-    })
+    });
+    routeActions(config,'')
     runserver('Devserver in SOURCE MODE');
 }
 
-function serve_inline() {
+function serve_inline(config) {
     fastify.register(require('fastify-static'), { root: __dirname, serve: false });
     fastify.get('/', (req, res) => {
         res.redirect("index.html");
@@ -44,17 +63,16 @@ function serve_inline() {
     fastify.get('/index.html', (req, res) => {
         res.sendFile('dist/index.html');
     });
-    fastify.get('/data.json', (req, res) => {
-        res.sendFile('src/data.json');
-    });
+    routeActions(config,'src/')
     runserver('Devserver in INLINE MODE');
 }
 
-function serve_gz() {
+function serve_gz(config) {
     var gzfile_name = path.resolve("dist/index.html.gz");
     var gzfile_length = fs.statSync(gzfile_name)["size"];
     var last_modified = new Date().toUTCString();
 
+    fastify.register(require('fastify-static'), { root: __dirname, serve: false });
     fastify.get('/', (req, res) => {
         res.redirect("index.html");
     });
@@ -73,13 +91,7 @@ function serve_gz() {
             res.send(stream);
         }
     });
-
-
-    fastify.get('/data.json', (req, res) => {
-        const stream = fs.createReadStream(path.resolve('src/data.json'))
-        res.send(stream);
-        // res.sendFile(path.resolve('src/data.json'));
-    });
+    routeActions(config,'src/')
     runserver('Devserver in GZ MODE');
 }
 

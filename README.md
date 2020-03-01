@@ -36,19 +36,42 @@ Another drawback is the high use of limited resources:
 1. Either start from a clone of this repository, or copy the webcontent folder in an existing platformIO project folder
 2. run ```npm install``` from within the webcontent folder. this will create the node_modules subfolder and fetch all the required tools for building and testing.
 
-## Running / Testing the application
-    
-With the task explorer pane in visual studio code, the ___clientside___ can be build with the _gulp scripts_
+## Building the client application
+With the task explorer pane in visual studio code, the **clientside** can be build with the *gulp scripts*
 - **buildClient_inline** : generates all html, js and css files combined into one single index.html and the compressed version in index.html.gz. files are stored in the dist folder.
 - **buildClient_embeded** : geneates the index.html.gz.h file that can be referenced from within the ESP code.
 
-Various runmodes on the client side:
-a. final 
-b. inlined html
-c. base html
+## Running the application with the local devserver
+with the task explorer pane in visual studio code, the client can be tested using the local devserver
+the configuration is done in ```devserver-config.yaml``` and allows for varying runmodes
 
-x. json requests handled by the arduino c++ code
-y. json requests mocked in the testenvironment
+```yaml
+# MODE SECTION
+# possible values are:
+# source -> serve all the files from the src directory
+# inline -> serve the single combined index.html file (includes transpilation by babel)
+# gz     -> serve the gziped version of the combined index.html
+
+mode : gz
+
+# ACTION SECTION
+# list of urls that can be called from the client
+# typically requests for info, or actions.
+# in inline/gz mode, these requests
+#   - will be routed to the src folder if the proxy feature is disabled (see below)
+#   - will be forwarded to the proxy address if proxy is enabled
+action_urls:
+    - data.json
+    - action
+    - reset
+
+# PROXY SECTION
+# allows to pass on the action url's to the live esp code running
+#
+proxy_enabled : false
+proxy_address : http://192.168.1.109/
+
+```
 
 ## Credits
 This project is greatly inspired by the information I found on a tutorial by Xose Pérez on his Tinkerman blog:

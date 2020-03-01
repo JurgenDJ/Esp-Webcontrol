@@ -1,0 +1,29 @@
+#  configuration to determine the working of the devsever
+
+
+# MODE SECTION
+# possible values are:
+# source -> serve all the files from the src directory
+# inline -> serve the single combined index.html file (includes transpilation by babel)
+# gz     -> serve the gziped version of the combined index.html
+
+mode : gz
+
+# ACTION SECTION
+# list of urls that can be called from the client
+# typically requests for info, or actions.
+# in inline/gz mode, these requests
+#   - will be routed to the src folder if the proxy feature is disabled (see below)
+#   - will be forwarded to the proxy address if proxy is enabled
+action_urls:
+    - data.json
+    - action
+    - reset
+
+# PROXY SECTION
+# allows to pass on the action url's to the live esp code running
+#
+proxy_enabled : true
+proxy_address : http://192.168.1.109/
+
+
