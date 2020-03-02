@@ -5,6 +5,13 @@ const yaml = require('js-yaml');
 const path = require('path');
 const port = 3000
 
+function generateStaticHandler(static_prefix, url){
+    // closure
+    var static_prefix = static_prefix;
+    var url = url;
+    return (req,res)=> res.sendFile(static_prefix + url);
+}
+
 try {
     const config = yaml.load(fs.readFileSync('devserver-config.yaml', 'utf8'), { schema: yaml.JSON_SCHEMA });
     console.log(JSON.stringify(config));
@@ -34,15 +41,18 @@ function routeActions(config, static_prefix) {
     if (config.proxy_enabled) {
         fastify.register(require('fastify-reply-from'), { base: config.proxy_address });
         for (url of config.action_urls) {
-            console.log('/'+url);
-            fastify.get('/' + url, (req, res) => res.from('/' + url));
-            fastify.post('/' + url, (req, res) => res.from('/' + url));
+            console.log('/' + url);
+            fastify.route({
+                path : '/'+url, 
+                method : ['GET','POST'],
+                handler : (req, res) => res.from(req.raw.url, {method: req.raw.method})
+            })
         }
     } else {
         for (url of config.action_urls) {
-            console.log('/'+url+"  -> "+path.resolve('src/'+url));
-            fastify.get('/' + url, (req, res) => res.sendFile(static_prefix + url));
-            fastify.post('/' + url, (req, res) => res.sendFile(static_prefix+url));
+            console.log('/' + url + "  -> " + path.resolve('src/' + url));
+            fastify.get('/' + url, generateStaticHandler(static_prefix, url));
+            fastify.post('/' + url, generateStaticHandler(static_prefix, url));
         }
     }
 }
@@ -51,7 +61,7 @@ function serve_source(config) {
     fastify.register(require('fastify-static'), {
         root: path.join(__dirname, 'src')
     });
-    routeActions(config,'')
+    routeActions(config, '')
     runserver('Devserver in SOURCE MODE');
 }
 
@@ -63,7 +73,7 @@ function serve_inline(config) {
     fastify.get('/index.html', (req, res) => {
         res.sendFile('dist/index.html');
     });
-    routeActions(config,'src/')
+    routeActions(config, 'src/')
     runserver('Devserver in INLINE MODE');
 }
 
@@ -91,7 +101,7 @@ function serve_gz(config) {
             res.send(stream);
         }
     });
-    routeActions(config,'src/')
+    routeActions(config, 'src/')
     runserver('Devserver in GZ MODE');
 }
 
