@@ -31,6 +31,7 @@ void onIndex(AsyncWebServerRequest *request)
 void setup()
 {
   Serial.begin(9600);
+  pinMode(LED_BUILTIN,OUTPUT);
   Serial.println("starting ...");
   WiFi.mode(WIFI_STA);
   WiFi.begin(wifi_ssid, wifi_pass);
@@ -46,11 +47,12 @@ void setup()
   server.rewrite("/", "/index.html");
   server.on("/index.html", HTTP_GET, onIndex);
   server.on("/data.json", HTTP_GET, onData);
+  server.on("/action", HTTP_POST, onAction);
   server.onNotFound([](AsyncWebServerRequest *request) { request->send(404); });
   server.begin();
 }
 
 void loop()
 {
-  // put your main code here, to run repeatedly:
+  digitalWrite(LED_BUILTIN,handlerLedStatus);
 }

@@ -5,5 +5,8 @@
 
 
 void onData(AsyncWebServerRequest *request);
+void onAction(AsyncWebServerRequest *request);
+
+bool handlerLedStatus = false;
 
 #endif /* !HANDLER_H_ */

@@ -58,3 +58,23 @@ void onData(AsyncWebServerRequest *request)
   serializeJson(doc, *response);
   request->send(response);
 }
+
+void onAction(AsyncWebServerRequest *request){
+  if(request->hasParam("action") && request->hasParam("room")){
+    String actionId = request->getParam("action")->value();
+    String roomId = request->getParam("room")->value();
+    Serial.print("Action: ");
+    Serial.print(actionId);
+    Serial.print(" for room ");
+    Serial.println(roomId);
+
+    // alternating the LED to indicate the action post is handled
+    // bool prevstate = digitalRead(LED_BUILTIN);
+    // digitalWrite(LED_BUILTIN, !prevstate);
+    handlerLedStatus = ! handlerLedStatus;
+  }
+  else{
+    Serial.print("parameters action and room are required");
+  }
+  onData(request);
+}

@@ -74,6 +74,15 @@ function refreshData() {
     })
         .then((body) => renderData(body));
 }
+function postAction(room, action) {
+    var opts = {
+        method: 'POST',
+        headers: {}
+    };
+    fetch('action?room='+room+'&action='+action,opts)
+    .then((response) => response.json())
+    .then((body)=> renderData(body));
+}
 
 function renderData(data) {
     document.getElementById("floor0Heating").innerHTML = data.floor0Heating ? fire_svg : dot_circle_svg;
@@ -98,15 +107,15 @@ window.onload = function () {
 
 function actionOn(room) {
     console.log("action on handler " + room);
-    /// todo: post the action to the server + render the returned data
+    postAction(room, "ON");
 }
 function actionOff(room) {
     console.log("action off handler " + room);
-    /// todo: post the action to the server + render the returned data
+    postAction(room, "OFF");
 }
 function actionTimer(room) {
     console.log("action timer handler " + room);
-    /// todo: post the action to the server + render the returned data
+    postAction(room, "TIMER");
 }
 
 
