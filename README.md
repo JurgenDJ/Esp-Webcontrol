@@ -73,6 +73,16 @@ proxy_address : http://192.168.1.109/
 
 ```
 
+## Example in this project : Thermostat
+The client and server code used in this repository serves as an example, imagine a situation where the heating is controlled by an ESP8266.
+There is no code related to driving the actual hardware, other than blinking the buildin led. I tested this application with a NodeMCU module.
+
+- web client using fetch and css grid to serve a fast, single page app that is adaptive to the screenwidth of the client.
+- aruino code to serve both 
+    - the static page, including the caching logic
+    - handling the data requests and the actions
+- The arduino code makes use of the *ESP Async WebServer* library, but this could also be done using the standard *ESP8266WebServer.h* library.
+ 
 ## Credits
 This project is greatly inspired by the information I found on a tutorial by Xose Pérez on his Tinkerman blog:
  https://tinkerman.cat/post/embed-your-website-in-your-esp8266-firmware-image/
