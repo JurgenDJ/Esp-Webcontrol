@@ -15,7 +15,7 @@
     "babel": "^6.23.0",
     "del": "^5.1.0",
     "fastify": "^2.12.0",
-    "fastify-reply-from": "^2.0.0",
+    "fastify-reply-from": "^4.0.2",
     "fastify-static": "^2.6.0",
     "gulp": "^4.0.2",
     "gulp-babel": "^8.0.0",
